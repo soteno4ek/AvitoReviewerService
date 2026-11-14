@@ -39,20 +39,15 @@ app.MapPost("/api/pullrequests/{id}/assign", (int id) =>
     if (available.Count == 0) return Results.BadRequest("No available reviewers");
 
     var random = new Random();
-    pr.AssignedReviewers = available.OrderBy(x => random.Next()).Take(2).ToList();
-    return Results.Ok(pr);
+    var selected = available.OrderBy(x => random.Next()).Take(2).ToList();
+
+    return Results.Ok(selected);
 });
 
 app.MapGet("/api/users/{userId}/pullrequests", (int userId) =>
 {
     var myPrs = pullRequests.Where(p => p.AuthorId == userId).ToList();
     return Results.Ok(myPrs);
-});
-
-app.MapGet("/api/ml/export", () =>
-{
-    var dataForMl = pullRequests.Where(p => p.AssignedReviewers.Count > 0).ToList();
-    return Results.Ok(dataForMl);
 });
 
 app.Run();
@@ -63,8 +58,6 @@ public class PullRequest
     public string Title { get; set; } = string.Empty;
     public int AuthorId { get; set; }
     public List<int> TeamMembers { get; set; } = new();
-    public List<int> AssignedReviewers { get; set; } = new();
-    public string Status { get; set; } = "Open";
 }
 
 public class CreatePullRequestDto
