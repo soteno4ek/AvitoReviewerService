@@ -39,9 +39,8 @@ app.MapPost("/api/pullrequests/{id}/assign", (int id) =>
     if (available.Count == 0) return Results.BadRequest("No available reviewers");
 
     var random = new Random();
-    var selected = available.OrderBy(x => random.Next()).Take(2).ToList();
-
-    return Results.Ok(selected);
+    pr.AssignedReviewers = available.OrderBy(x => random.Next()).Take(2).ToList();
+    return Results.Ok(pr);
 });
 
 app.MapGet("/api/users/{userId}/pullrequests", (int userId) =>
@@ -58,6 +57,7 @@ public class PullRequest
     public string Title { get; set; } = string.Empty;
     public int AuthorId { get; set; }
     public List<int> TeamMembers { get; set; } = new();
+    public List<int> AssignedReviewers { get; set; } = new();
 }
 
 public class CreatePullRequestDto
