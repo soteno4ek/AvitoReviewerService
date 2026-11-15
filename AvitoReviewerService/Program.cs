@@ -58,6 +58,7 @@ public class PullRequest
     public int AuthorId { get; set; }
     public List<int> TeamMembers { get; set; } = new();
     public List<int> AssignedReviewers { get; set; } = new();
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public class CreatePullRequestDto
