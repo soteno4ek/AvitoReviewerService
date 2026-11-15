@@ -49,6 +49,12 @@ app.MapGet("/api/users/{userId}/pullrequests", (int userId) =>
     return Results.Ok(myPrs);
 });
 
+app.MapGet("/api/ml/export", () =>
+{
+    var dataForMl = pullRequests.Where(p => p.AssignedReviewers.Count > 0).ToList();
+    return Results.Ok(dataForMl);
+});
+
 app.Run();
 
 public class PullRequest
@@ -59,6 +65,7 @@ public class PullRequest
     public List<int> TeamMembers { get; set; } = new();
     public List<int> AssignedReviewers { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string Status { get; set; } = "Open";
 }
 
 public class CreatePullRequestDto
